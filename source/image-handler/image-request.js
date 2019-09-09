@@ -137,7 +137,7 @@ class ImageRequest {
             return decoded.key;
         } else if (requestType === "Thumbor" || requestType === "Custom") {
             // Parse the key from the end of the path
-            const key = (event["path"]).split("/");
+            const key = (event["pathParameters"]["proxy"]).split("/");
             return key[key.length - 1];
         } else {
             // Return an error for all other conditions
@@ -157,7 +157,7 @@ class ImageRequest {
      * @param {Object} event - Lambda request body.
     */
     parseRequestType(event) {
-        const path = event["path"];
+        const path = event["pathParameters"]["proxy"];
         // ----
         const matchDefault = new RegExp(/^(\/?)([0-9a-zA-Z+\/]{4})*(([0-9a-zA-Z+\/]{2}==)|([0-9a-zA-Z+\/]{3}=))?$/);
         const matchThumbor = new RegExp(/^(\/?)((fit-in)?|(filters:.+\(.?\))?|(unsafe)?).*(.+jpg|.+png|.+webp|.+tiff|.+jpeg)$/);
@@ -190,7 +190,7 @@ class ImageRequest {
      * @param {Object} event - The proxied request object.
      */
     decodeRequest(event) {
-        const path = event["path"];
+        const path = event["pathParameters"]["proxy"];
         if (path !== undefined) {
             const splitPath = path.split("/");
             const encoded = splitPath[splitPath.length - 1];
